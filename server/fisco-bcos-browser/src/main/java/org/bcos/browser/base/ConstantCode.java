@@ -22,6 +22,7 @@ public interface ConstantCode {
     RetCode NODE_ERROR_OR_NOT_ACTIVE = new RetCode(305007, "node error or not alive");
     RetCode FILE_TYPE_ERROR = new RetCode(305008,"file type error");
     RetCode EMPETY_FILE_ERROR = new RetCode(305009,"The file is empety!");
+    RetCode NODE_NO_NOT_BELONG = new RetCode(305008, "node do not belong to this group");
 
     /* system error */
     RetCode SYSTEM_ERROR = RetCode.mark(105001, "system error");

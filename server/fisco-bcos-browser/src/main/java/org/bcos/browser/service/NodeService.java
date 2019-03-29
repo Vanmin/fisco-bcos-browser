@@ -1,5 +1,6 @@
 package org.bcos.browser.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +73,15 @@ public class NodeService {
             node.setRpcPort(data.get(i).getRpcPort());
             node.setP2pPort(data.get(i).getP2pPort());
 
-            SyncInfoFromChain syncInfo = web3jRpc.getSyncInfo(groupId, node);
-            
-            if (syncInfo == null) {
+            List<Integer> groups = web3jRpc.getGroupList(node);
+            if (groups == null || groups.size() == 0) {
                 throw new BaseException(ConstantCode.NODE_ERROR_OR_NOT_ACTIVE);
             }
+            if (!groups.contains(reqAddNode.getGroupId())) {
+                throw new BaseException(ConstantCode.NODE_NO_NOT_BELONG);
+            }
 
+            SyncInfoFromChain syncInfo = web3jRpc.getSyncInfo(groupId, node);
             node.setNodeId(syncInfo.getNodeId());
             node.setType(0);
             nodeMapper.add(node);
@@ -121,7 +125,7 @@ public class NodeService {
         map.put("pageSize", pageSize);
 
         int total = nodeMapper.getNodeCnts(map);
-        List<Node> list = null;
+        List<Node> list = new ArrayList<>();
         if (total > 0) {
             list = nodeMapper.getNodeListByPage(map);
         }
@@ -140,7 +144,7 @@ public class NodeService {
      */
     public BaseResponse deleteNodeById(int groupId, String nodeId) {
         BaseResponse response = new BaseResponse(ConstantCode.SUCCESS);
-        nodeMapper.deleteNodeById(groupId, nodeId);
+        nodeMapper.updateToSync(groupId, nodeId);
         return response;
     }
 }

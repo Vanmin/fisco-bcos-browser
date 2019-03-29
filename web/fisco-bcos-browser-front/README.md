@@ -1,4 +1,7 @@
+
+
 # 区块链浏览器前端
+
 本项目是fisco-bcos前端项目，使用框架`vue-cli`。
 
 兼容浏览器IE9及以上，360浏览器兼容版（IE9内核），360浏览器极速版，chrome浏览器。
@@ -6,8 +9,11 @@
 ## 1、功能
 
 (1)、主要功能是区块链概览，查看区块，查看交易，节点配置以及群组切换。
+
 (2)、支持群组切换，需要配置群组和节点。
+
 (3)、上传并编译发送交易的合约后，可以查看交易的inputs和event解码数据。
+
 (4)、区块链概览，查看区块，查看交易和节点配置页面每10s执行一轮请求。
 
 ## 2、部署
@@ -23,26 +29,40 @@ nginx安装请参考附录
 
 ### 2.2 拉取代码
 
-代码可以放在/data/app/page下面
-执行命令：
 
-    git clone http:xx/fisco-bcos-browser-web.git
+执行命令：(前后端同机部署时，只需要拉取一次)
+
+```shell
+git clone https://github.com/FISCO-BCOS/fisco-bcos-browser.git
+```
+
+**注意**：代码拉取后，切换到相应分支。
+
+```shell
+cd fisco-bcos-browser
+git checkout XXXXX
+```
+
+ 然后将其中./web/fisco-bcos-browser-front/目录中的dist目录放到/data/app/web目录下。目录可以自己指定，只需要nginx配置文件步骤2保持一致即可。
 
 ### 2.3 修改nginx配置
 
-在代码库中doc文件下有nginx配置文件，直接可以拿来替换安装的nginx的配置文件nginx.conf；
+在./web/fisco-bcos-browser-front/doc文件下有nginx配置文件，直接可以拿来替换安装的nginx的配置文件nginx.conf；
+
+**注意**：如果按照附录安装的nginx，配置文件路径在/usr/local/nginx/conf/nginx.conf 。
+
 然后修改nginx.conf；
 
-(1)、修改前端服务的ip地址和端口。
-(2)、修改前端文件的路径,直接指向已拉取代码的dist目录。
-(3)、修改后端服务的ip和端口，注意'/api'不要修改。
+1. 修改前端服务的ip地址和端口。
+2. 修改前端文件的路径,直接指向已拉取代码的dist目录。
+3. 修改后端服务(fisco-bcos-browser)的ip和端口，注意'/api'不要修改。
 
 ```Nginx
     server {
-            listen       8088 default_server;   //前端端口
-            server_name  192.168.0.1;         //前端地址，可配置为域名
+            listen       8089 default_server;   #步骤1、前端端口
+            server_name  192.168.0.1;         #步骤1、前端地址，可配置为域名
             location / {
-                    root    /data/app/page/web/dist;   //前端文件路径
+                    root    /data/app/web/dist;   #步骤2、前端文件路径
                     index  index.html index.htm;
                     try_files $uri $uri/ /index.html =404;
                 }
@@ -51,7 +71,7 @@ nginx安装请参考附录
             include /etc/nginx/default.d/*.conf;
 
             location /api {
-                    proxy_pass    http://10.10.10.1:8089/;    //后端服务地址及端口
+                    proxy_pass    http://192.168.0.2:8090/;    #步骤3、后端服务(fisco-bcos-browser)地址及端口
                	 	proxy_set_header		Host				$host;
                     proxy_set_header		X-Real-IP			$remote_addr;
                     proxy_set_header		X-Forwarded-For		$proxy_add_x_forwarded_for;
@@ -64,10 +84,14 @@ nginx安装请参考附录
 (1)、启动nginx。
 启动命令：
 
-	/usr/local/sbin/nginx    (nginx下载在/usr/local目录下)
+```shell
+/usr/local/nginx/sbin/nginx   
+```
 启动报错重点排查：日志路径是否正确（error.log和access.log）,nginx有没有添加用户权限。
-(2)、打开页面，页面url是nginx配置的ip和端口。
-例如:上面配置文件的url为   http:192.168.0.1:8088
+
+(2)、打开页面，页面url是nginx配置的前端端口和前端ip。
+例如:上面配置文件的url为   http:192.168.0.1:8089
+
 (3)、打开页面后，配置群组（群组ip是搭链的群组ip），配置节点（该群组下节点），然后就可以查看具体数据了。
 
 ## 3、附录
@@ -85,11 +109,11 @@ nginx下载地址：https://nginx.org/download/（下载最新稳定版本即可
 将下载的包移动到/usr/local/下
 #### 3.1.3 安装nginx
 ##### 3.1.3.1解压
-	tar -zxvf nginx-1.9.9.tar.gz
+	tar -zxvf nginx-1.10.2.tar.gz
 
 ##### 3.1.3.2进入nginx目录
 
-	cd nginx-1.9.9
+	cd nginx-1.10.2
 ##### 3.1.3.3配置
 
 	./configure --prefix=/usr/local/nginx
@@ -106,3 +130,10 @@ nginx下载地址：https://nginx.org/download/（下载最新稳定版本即可
 
 	nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
 	nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful
+##### 3.1.3.6nginx几个常见命令
+```shell
+/usr/local/nginx/sbin/nginx -s reload            # 重新载入配置文件
+/usr/local/nginx/sbin/nginx -s reopen            # 重启 Nginx
+/usr/local/nginx/sbin/nginx -s stop              # 停止 Nginx
+ps -ef | grep nginx                              # 查看nginx进程
+```
