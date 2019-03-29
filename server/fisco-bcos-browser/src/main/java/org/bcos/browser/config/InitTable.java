@@ -17,4 +17,6 @@ public class InitTable implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         groupMapper.createTbGroup(Constants.TB_GROUP);
     }
+
+
 }

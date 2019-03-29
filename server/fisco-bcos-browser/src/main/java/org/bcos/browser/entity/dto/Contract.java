@@ -14,4 +14,5 @@ public class Contract {
     private String contractAddress;
     private String contractDesc;
     private String errorInfo;
+    private String contractPath;
 }

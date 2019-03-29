@@ -3,13 +3,20 @@ package org.bcos.browser.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.bcos.browser.entity.dto.Contract;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ContractMapper {
 
     void add(Contract contract);
 
     int getContractByName(@Param(value = "groupId") int groupId, 
             @Param(value = "contractName") String contractName);
+
+    int getContractByNameAndPath(
+            @Param(value = "contractName") String contractName,
+            @Param(value = "contratPath") String contractPath);
+
     
     int getContractCnts(@Param(value = "groupId") int groupId);
     

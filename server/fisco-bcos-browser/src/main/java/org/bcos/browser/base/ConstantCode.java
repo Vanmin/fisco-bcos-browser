@@ -20,6 +20,8 @@ public interface ConstantCode {
     RetCode P2PPORT_IS_EXISTED = new RetCode(305005, "ip and p2pPort is existed in this group");
     RetCode IP_FORMAT_ERROR = new RetCode(305006, "ip format error");
     RetCode NODE_ERROR_OR_NOT_ACTIVE = new RetCode(305007, "node error or not alive");
+    RetCode FILE_TYPE_ERROR = new RetCode(305008,"file type error");
+    RetCode EMPETY_FILE_ERROR = new RetCode(305009,"The file is empety!");
 
     /* system error */
     RetCode SYSTEM_ERROR = RetCode.mark(105001, "system error");

@@ -188,6 +188,17 @@ public class SchedulerService {
     }
 
     /**
+     * syncGroupInfo
+     */
+    public void syncGroupInfo(){
+
+    }
+
+
+
+
+
+    /**
      * checkNodeActive.
      */
     public void checkNodeActive() {

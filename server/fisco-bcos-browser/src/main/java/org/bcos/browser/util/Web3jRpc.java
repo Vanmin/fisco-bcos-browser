@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.bcel.classfile.Constant;
+import org.bcos.browser.base.ConstantCode;
 import org.bcos.browser.base.Constants;
 import org.bcos.browser.entity.dto.BlockFromChain;
 import org.bcos.browser.entity.dto.BlockNumberAndTxn;
@@ -247,4 +249,23 @@ public class Web3jRpc {
         }
         return result;
     }
+
+    /**
+     * getGroupsId
+     */
+
+    public List<Integer> getGroupsId(Node node){
+        List<Integer> result = new ArrayList<>();
+        Object[] params = new Object[] {};
+        Object object = requestNode(Constants.GET_GROUP_LIST, params,node);
+
+        if (object != null) {
+            result = CommonUtils.object2JavaBean(object, List.class);
+        }
+        return result;
+    }
+
+
 }
+
+
